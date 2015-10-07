@@ -1,0 +1,64 @@
+<script>
+  function validate_login() {
+    email = document.getElementById('email').value;
+    password = document.getElementById('password').value;
+
+    email_error = document.getElementById('email_error');
+    password_error = document.getElementById('password_error');
+    email_error.innerHTML = "";
+    password_error.innerHTML = "";
+
+    if(email == null || email =="") {
+      email_error.innerHTML = "*";
+      return false;
+    }
+
+    if(password == null || password =="") {
+      password_error.innerHTML = "*";
+      return false;
+    }
+
+  }
+</script>
+
+
+<div id="authentication-page">
+
+  <h2 class="login-h2">log in to mahaswami.<span>com</span></h2>
+
+  <%= image_tag "login.png" %>
+  <p class="notice"><%= notice %></p>
+
+
+  <p class="alert"><%= alert %></p>
+<div class="clear"></div>
+  <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+  <div class="field">
+    <%= f.label :email %><br />
+    <%= f.email_field :email, autofocus: true, :id => "email" %> <span id="email_error"></span>
+  </div>
+
+  <div class="field">
+    <%= f.label :password %><br />
+    <%= f.password_field :password, autocomplete: "off", :id => "password" %> <span id="password_error"></span>
+  </div>
+
+  <% if devise_mapping.rememberable? -%>
+      <div class="field">
+        <%= f.check_box :remember_me %>
+        <%= f.label :remember_me %>
+      </div>
+  <% end -%>
+
+  <div class="actions">
+    <div class="btn">
+      <%= f.submit "", class: "login_cls", :onclick => "return validate_login();" %>
+    </div>
+  </div>
+  <% end %>
+
+  <div class="shared-links">
+    <%= render "devise/shared/links" %>
+  </div>
+
+</div>

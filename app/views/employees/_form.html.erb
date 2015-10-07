@@ -1,0 +1,49 @@
+<script>
+  function validate_employee() {
+    emp_id = document.getElementById('emp-id').value;
+    emp_name = document.getElementById('emp-name').value;
+
+    emp_id_error = document.getElementById('emp-id-error');
+    emp_name_error = document.getElementById('emp-name-error');
+    emp_id_error.innerHTML = "";
+    emp_name_error.innerHTML = "";
+
+    if(emp_id == null || emp_id =="") {
+      emp_id_error.innerHTML = "*";
+      return false;
+    }
+
+    if(emp_name == null || emp_name =="") {
+      emp_name_error.innerHTML = "*";
+      return false;
+    }
+
+  }
+</script>
+
+
+
+<%= form_for(@employee) do |f| %>
+  <% if @employee.errors.any? %>
+    <div id="error_explanation">
+      <ul>
+      <% @employee.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    Employee ID<br>
+    <%= f.text_field :emp_id, :id => "emp-id" %> <span id="emp-id-error"></span>
+  </div>
+  <div class="field">
+    Employee Name<br>
+    <%= f.text_field :emp_name, :id => "emp-name" %> <span id="emp-name-error"></span>
+  </div>
+  <div class="actions">
+    <%= f.submit class: "login_cls", :onclick => "return validate_employee();" %>
+
+  </div>
+<% end %>

@@ -1,0 +1,42 @@
+
+<div id="authentication-page">
+
+  <p class="notice"><%= notice %></p>
+  <p class="alert"><%= alert %></p>
+
+  <h2>sign up to mahaswami.<span>com</span></h2>
+
+  <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+  <%= devise_error_messages! %>
+
+  <div class="field">
+    <%= f.label :email %><br />
+    <%= f.email_field :email, autofocus: true, :id => "email" %>
+  </div>
+
+  <div class="field">
+    <%= f.label :password %>
+    <% if @validatable %>
+        <em>(<%= @minimum_password_length %> characters minimum)</em>
+    <% end %><br />
+    <%= f.password_field :password, autocomplete: "off", :id => "password" %>
+  </div>
+
+  <div class="field">
+    <%= f.label :password_confirmation %><br />
+    <%= f.password_field :password_confirmation, autocomplete: "off", :id => "confirm-password" %>
+  </div>
+
+  <div class="actions">
+    <div class="btn">
+    <%= f.submit "", class: "signup_cls" %>
+      </div>
+  </div>
+  <% end %>
+
+  <div class="shared-links">
+    <%= render "devise/shared/links" %>
+  </div>
+
+
+</div>

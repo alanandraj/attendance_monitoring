@@ -1,0 +1,19 @@
+<div class="sub-page">
+
+  <p id="notice"><%= notice %></p>
+
+  <p>
+    <strong>Employee:</strong>
+    <%= @employee.emp_id %>
+  </p>
+
+  <p>
+    <strong>Employee name:</strong>
+    <%= @employee.emp_name %>
+  </p>
+
+  <%= link_to 'Edit', edit_employee_path(@employee) %> |
+  <%= link_to 'Back', admins_index_path %>
+</div>
+
+<p><%= link_to "Download PDF", employee_path(@employee, format: "pdf"), :target => "_blank" %></p>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>AttendanceMonitoring</title>
+  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+  <%= csrf_meta_tags %>
+</head>
+<body>
+
+<div id="container">
+
+  <div id="header">
+    <div class="logo">
+      <%= link_to image_tag("mahaswami_logo.png"), root_url %>
+    </div>
+    <h1>Welcome to Mahaswami Software</h1>
+
+    <div id="authentication-links">
+      <% if admin_signed_in? %>
+          <%= link_to "Logout", destroy_admin_session_path, :method => :delete %>
+      <% end %>
+      <% if !admin_signed_in? %>
+          <%= link_to 'Login', new_admin_session_path %> /
+          <%= link_to 'Signup', new_admin_registration_path %>
+
+      <% end %>
+
+    </div>
+
+  </div>
+
+
+  <div class="clear"></div>
+
+  <div id="main-content">
+
+   <%= yield %>
+
+  </div>
+
+  <div id="footer">
+
+    <p id="copy-right">Copyright &copy; 2006-2015. Mahaswami Software Private Ltd</p>
+
+  </div>
+
+</div>
+
+</body>
+</html>

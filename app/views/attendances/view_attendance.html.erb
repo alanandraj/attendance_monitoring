@@ -1,0 +1,233 @@
+<div id="attendance-page">
+  <h2>Attendance Record</h2>
+
+  <div class="attendance-selection">
+    <h3>Record by period</h3>
+    <div id="calendar">
+      <%= form_tag :controller => 'attendances', :action => 'view_attendance' do %>
+          <table>
+            <tr>
+              <td><strong>From Date</strong></td>
+              <td><%= date_field_tag(:fromdate, params[:fromdate], :id => 'from-date') %></td>
+              <td></td>
+
+              <td><strong>To Date</strong></td>
+              <td><%= date_field_tag(:todate, params[:todate], :id => 'to-date') %></td>
+            </tr>
+
+            <tr>
+              <td></td>
+              <td></td>
+              <td>
+                <%= image_submit_tag "generate_btn.png", class: "generate-btn-cls", alt: 'Generate',
+                                                               :onclick => "return validate_date();" %>
+                    </td>
+                    </tr>
+                    </table>
+                <% end %>
+
+                </div>
+
+
+                <h3>Record by selection</h3>
+
+                <%
+                   emp_name_array = []
+                   emp_data = Employee.order(:emp_name)
+                   emp_data.each do |e_record|
+                     emp_name_array<<[e_record.emp_name, e_record.emp_name]
+                   end
+
+                %>
+
+                <%= form_tag(:controller => 'attendances', :action => 'view_attendance') do %>
+                    <table>
+                      <tr>
+                        <td><strong>Select Employee</strong></td>
+                        <td>
+
+                          <% if params[:selected_employee].nil? or params[:selected_employee] == "" %>
+                              <%= select_tag :selected_employee, options_for_select(emp_name_array), :prompt => '--Select--',
+                                             :onchange => "this.form.submit();" %>
+                          <% else %>
+                              <%= select_tag :selected_employee, options_for_select(emp_name_array), :prompt => params[:selected_employee],
+                                             :onchange => "this.form.submit();" %>
+
+                          <% end %>
+
+                        </td>
+
+                        <% if params[:leave_or_all].nil? or params[:leave_or_all] == "" %>
+                            <td><%= radio_button_tag :leave_or_all, "all", false, :onclick => "this.form.submit();" %> All</td>
+                            <td><%= radio_button_tag :leave_or_all, "leave", false, :onclick => "this.form.submit();" %> Leave</td>
+
+                        <% elsif params[:leave_or_all] == "all" %>
+                            <td><%= radio_button_tag :leave_or_all, "all", true, :onclick => "this.form.submit();" %> All</td>
+                            <td><%= radio_button_tag :leave_or_all, "leave", false, :onclick => "this.form.submit();" %> Leave</td>
+                        <% elsif params[:leave_or_all] == "leave" %>
+                            <td><%= radio_button_tag :leave_or_all, "all", false, :onclick => "this.form.submit();" %> All</td>
+                            <td><%= radio_button_tag :leave_or_all, "leave", true, :onclick => "this.form.submit();" %> Leave</td>
+
+                        <% end %>
+
+                      </tr>
+
+                    </table>
+
+
+                <% end %>
+
+                </div>
+
+
+                <% unless @all_attendances.empty? %>
+                    <table id="view-record">
+                      <tr>
+                        <th>Employee Id</th>
+                        <th>Employee Name</th>
+                        <th class="center">Date</th>
+                        <th class="center">In Time</th>
+                        <th class="center">Out Time</th>
+                        <th class="center">Total Duration</th>
+                        <th class="center">Status</th>
+
+
+                      </tr>
+
+                      <% @all_attendances.each do |rec| %>
+
+                          <%
+                             emp_id = rec.emp_id
+                             emp_name = rec.emp_name
+                             date = rec.date.strftime("%d-%m-%Y")
+                             in_time = rec.in_time.blank? ? "-" : rec.in_time.strftime("%H:%M")
+                             out_time = rec.out_time.blank? ? "-" : rec.out_time.strftime("%H:%M")
+                             total_duration = rec.total_duration.blank? ? "-" : rec.total_duration.strftime("%H:%M")
+                             status = rec.status
+                          %>
+
+                          <tr>
+                            <td><%= emp_id %></td>
+                            <td><%= emp_name %></td>
+                            <td class="center"><%= date %></td>
+
+                            <td class="center"><%= in_time %></td>
+                            <td class="center"><%= out_time %></td>
+                            <td class="center"><%= total_duration %></td>
+                            <% if status == "A" %>
+                                <td class="center clr-red"><%= status %></td>
+                            <% else %>
+                                <td class="center clr-green"><%= status %></td>
+                            <% end %>
+
+
+                          </tr>
+
+                      <% end %>
+
+
+                    </table>
+
+                    <div class="download-link">
+                      <%= image_tag("download_pdf_btn.png") %>
+
+                    </div>
+
+
+
+                <% end %>
+
+                <!--  Only for particular employee -->
+
+
+                <% unless @emp_attendances.empty? %>
+                    <p></p>
+                    <strong>Employee ID : </strong> <%= @emp_attendances.first.emp_id %><br /><br />
+                    <strong>Employee Name : </strong> <%= @emp_attendances.first.emp_name %>
+                    <table id="view-record">
+                      <tr>
+                        <th class="center">Date</th>
+                        <th class="center">In Time</th>
+                        <th class="center">Out Time</th>
+                        <th class="center">Total Duration</th>
+                        <th class="center">Status</th>
+                      </tr>
+
+                      <% @emp_attendances.each do |rec| %>
+
+                          <%
+                             date = rec.date.strftime("%d-%m-%Y")
+                             in_time = rec.in_time.blank? ? "-" : rec.in_time.strftime("%H:%M")
+                             out_time = rec.out_time.blank? ? "-" : rec.out_time.strftime("%H:%M")
+                             total_duration = rec.total_duration.blank? ? "-" : rec.total_duration.strftime("%H:%M")
+                             status = rec.status
+                          %>
+
+                          <tr>
+                            <td class="center"><%= date %></td>
+                            <td class="center"><%= in_time %></td>
+                            <td class="center"><%= out_time %></td>
+                            <td class="center"><%= total_duration %></td>
+                            <% if status == "A" %>
+                                <td class="center clr-red"><%= status %></td>
+                            <% else %>
+                                <td class="center clr-green"><%= status %></td>
+                            <% end %>
+
+                          </tr>
+
+                      <% end %>
+
+
+                    </table>
+                    <div class="download-link">
+                      <%= image_tag("download_pdf_btn.png") %>
+
+                    </div>
+
+                    <br />
+
+                    <p><%= link_to "Download PDF", view_attendance_report_path(format: "pdf"), :target => "_blank" %></p>
+
+
+                <% end %>
+
+                <!--  Only for leave employee -->
+
+
+                <% unless @leave.empty? %>
+
+                    <table id="view-record">
+                      <tr>
+                        <th>Employee ID</th>
+                        <th>Employee Name</th>
+                        <th>Date</th>
+
+                      </tr>
+
+                      <% @leave.each do |rec| %>
+
+                          <%
+                             emp_id = rec.emp_id
+                             emp_name = rec.emp_name
+                             date = rec.date.strftime("%d-%m-%Y")
+                          %>
+
+                          <tr>
+                            <td><%= emp_id %></td>
+                            <td><%= emp_name %></td>
+                            <td><%= date %></td>
+                          </tr>
+
+                      <% end %>
+
+
+                    </table>
+                    <div class="download-link">
+                      <%= image_tag("download_pdf_btn.png") %>
+
+                    </div>
+
+                <% end %>
+
+  </div>
