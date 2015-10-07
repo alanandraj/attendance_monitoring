@@ -69,7 +69,7 @@ class AttendancesController < ApplicationController
        format.html
        format.pdf do
          pdf = Prawn::Document.new
-         @leave.each do |rec|
+         @emp_attendances.each do |rec|
            pdf.text "#{rec.emp_name}"
          end
          send_data pdf.render, filename: "Attendance.pdf",

@@ -181,13 +181,13 @@
 
                     </table>
                     <div class="download-link">
-                      <%= image_tag("download_pdf_btn.png") %>
+                      <%= link_to image_tag("download_pdf_btn.png"), view_attendance_path(format: "pdf"), :target => '_blank' %>
 
                     </div>
 
                     <br />
 
-                    <p><%= link_to "Download PDF", view_attendance_report_path(format: "pdf"), :target => "_blank" %></p>
+                    <p><%= link_to "Download PDF", view_attendance_path(format: "pdf"), :target => "_blank" %></p>
 
 
                 <% end %>
